@@ -1,0 +1,314 @@
+@startuml diagrama-de-classes
+title Diagrama de Classes - Model (br.com.encomendas.model)
+hide empty members
+skinparam classAttributeIconSize 0
+
+package "br.com.encomendas.model" {
+  class Cliente {
+    -Long id
+    -String nome
+    -String telefone
+    -String email
+    -CanalOrigem canalOrigem
+    -LocalDateTime dataCadastro
+    -List<Pedido> pedidos
+    +Long getId()
+    +String getNome()
+    +String getTelefone()
+    +String getEmail()
+    +CanalOrigem getCanalOrigem()
+    +LocalDateTime getDataCadastro()
+    +List<Pedido> getPedidos()
+    +atualizarContato(String novoTelefone, String novoEmail)
+    +renomear(String novoNome)
+  }
+
+  class Funcionario {
+    -Long id
+    -String nome
+    -String email
+    -PerfilFuncionario perfil
+    -boolean ativo
+    -List<Pedido> pedidosAtendidos
+    -List<VersaoPedido> versoesCriadas
+    -List<VersaoPedido> versoesAprovadas
+    -List<Pagamento> pagamentosRegistrados
+    +Long getId()
+    +String getNome()
+    +String getEmail()
+    +PerfilFuncionario getPerfil()
+    +boolean isAtivo()
+    +ativar()
+    +desativar()
+    +reativar()
+    +List<Pedido> getPedidosAtendidos()
+    +List<VersaoPedido> getVersoesCriadas()
+    +List<VersaoPedido> getVersoesAprovadas()
+    +List<Pagamento> getPagamentosRegistrados()
+    +alterarPerfil(PerfilFuncionario novoPerfil)
+    +boolean podeAtender()
+    +boolean podeEntregar()
+  }
+
+  class Produto {
+    -Long id
+    -String nome
+    -String descricao
+    -BigDecimal precoBase
+    -boolean ativo
+    -List<ItemPedido> itens
+    +Long getId()
+    +String getNome()
+    +String getDescricao()
+    +BigDecimal getPrecoBase()
+    +boolean isAtivo()
+    +ativar()
+    +desativar()
+    +reativar()
+    +alterarPreco(BigDecimal novoPreco)
+    +List<ItemPedido> getItens()
+    +alterarDescricao(String novaDescricao)
+  }
+
+  class DiaProducao {
+    -Long id
+    -LocalDate data
+    -int capacidade
+    -int vagasOcupadas
+    -List<Pedido> pedidos
+    +Long getId()
+    +LocalDate getData()
+    +int getCapacidade()
+    +int getVagasOcupadas()
+    +int vagasOcupadas()
+    +int vagasLivres()
+    +boolean temVagaLivre()
+    +reservar()
+    +liberar()
+    +List<Pedido> getPedidos()
+    +ajustarCapacidade(int novaCapacidade)
+    +reservar(int quantidade)
+    +liberar(int quantidade)
+  }
+
+  class LinkAcompanhamento {
+    -Long id
+    -String token
+    -boolean ativo
+    -LocalDateTime criadoEm
+    -Pedido pedido
+    +Long getId()
+    +String getToken()
+    +boolean isAtivo()
+    +LocalDateTime getCriadoEm()
+    +Pedido getPedido()
+    +desativar()
+    +reativar()
+    +boolean isValido()
+    +regenerarToken()
+  }
+
+  class Pedido {
+    -Long id
+    -Cliente cliente
+    -Funcionario atendente
+    -LocalDate dataEntrega
+    -DiaProducao diaProducao
+    -LocalDateTime dataCriacao
+    -StatusPedido status
+    -List<VersaoPedido> versoes
+    -List<Pagamento> pagamentos
+    -LinkAcompanhamento linkAcompanhamento
+    +Long getId()
+    +Cliente getCliente()
+    +Funcionario getAtendente()
+    +LocalDate getDataEntrega()
+    +DiaProducao getDiaProducao()
+    +LocalDateTime getDataCriacao()
+    +StatusPedido getStatus()
+    +List<VersaoPedido> getVersoes()
+    +List<Pagamento> getPagamentos()
+    +LinkAcompanhamento getLinkAcompanhamento()
+    +VersaoPedido criarVersao(int numero, String descricaoPersonalizacao, Funcionario criadaPor)
+    +VersaoPedido criarVersao(String descricao, Funcionario autor)
+    +aprovarVersao(int numero, Funcionario aprovador, OrigemAprovacao origem)
+    +aprovarVersaoPeloCliente(int numero)
+    +aprovarVersaoPeloCliente(int numero, Funcionario aprovador)
+    +aprovarVersaoInternamente(int numero, Funcionario aprovador)
+    +aprovarVersaoPeloCliente(VersaoPedido versao)
+    +aprovarVersaoInternamente(VersaoPedido versao, Funcionario aprovador)
+    +aprovarVersao(VersaoPedido versao, Funcionario aprovador, OrigemAprovacao origem)
+    +VersaoPedido getVersaoVigente()
+    +ItemPedido adicionarItem(int numeroVersao, Produto produto, int quantidade, BigDecimal precoUnitario, String personalizacao)
+    +registrarPagamento(Pagamento pagamento)
+    +Pagamento registrarPagamento(BigDecimal valor, TipoPagamento tipo, FormaPagamento forma, Funcionario registradoPor)
+    +BigDecimal getValorTotal()
+    +BigDecimal getTotalPago()
+    +BigDecimal getSaldoDevedor()
+    +VersaoPedido versaoVigente()
+    +BigDecimal valorTotal()
+    +BigDecimal totalPago()
+    +BigDecimal saldoDevedor()
+    +boolean isSaldoQuitado()
+    +LinkAcompanhamento gerarLinkAcompanhamento()
+    +marcarAguardandoMaterial()
+    +iniciarProducao()
+    +marcarPronto()
+    +agendarEntrega(DiaProducao novoDia)
+    +agendarEntrega(LocalDate novaDataEntrega)
+    +agendarEntrega(LocalDate novaDataEntrega, DiaProducao novoDia)
+    +registrarEntrega()
+    +registrarEntrega(Funcionario entregador)
+    +cancelar()
+    +VersaoPedido adicionarVersao(int numero, String descricaoPersonalizacao, Funcionario criadaPor)
+    +aguardarMaterial()
+    +entregar()
+  }
+
+  class VersaoPedido {
+    -Long id
+    -Pedido pedido
+    -int numero
+    -String descricaoPersonalizacao
+    -StatusVersao status
+    -LocalDateTime criadaEm
+    -LocalDateTime aprovadaEm
+    -Funcionario criadaPor
+    -Funcionario aprovador
+    -OrigemAprovacao origemAprovacao
+    -List<ItemPedido> itens
+    +Long getId()
+    +Pedido getPedido()
+    +int getNumero()
+    +String getDescricaoPersonalizacao()
+    +StatusVersao getStatus()
+    +LocalDateTime getCriadaEm()
+    +LocalDateTime getAprovadaEm()
+    +Funcionario getCriadaPor()
+    +Funcionario getAprovador()
+    +OrigemAprovacao getOrigemAprovacao()
+    +List<ItemPedido> getItens()
+    +BigDecimal getValorTotal()
+    +boolean isAprovada()
+    +aprovar(Funcionario aprovador, OrigemAprovacao origem)
+    +aprovar()
+    +invalidar()
+    +ItemPedido adicionarItem(Produto produto, int quantidade, BigDecimal precoUnitario, String personalizacao)
+    +removerItem(ItemPedido item)
+    +removerItem(Long itemId)
+    +removerItem(int index)
+    +alterarDescricao(String novaDescricao)
+  }
+
+  class ItemPedido {
+    -Long id
+    -VersaoPedido versaoPedido
+    -Produto produto
+    -int quantidade
+    -BigDecimal precoUnitario
+    -String personalizacao
+    +Long getId()
+    +VersaoPedido getVersaoPedido()
+    +Produto getProduto()
+    +int getQuantidade()
+    +BigDecimal getPrecoUnitario()
+    +String getPersonalizacao()
+    +BigDecimal getSubtotal()
+    +BigDecimal subtotal()
+    +alterarQuantidade(int novaQuantidade)
+  }
+
+  class Pagamento {
+    -Long id
+    -Pedido pedido
+    -BigDecimal valor
+    -TipoPagamento tipo
+    -FormaPagamento forma
+    -LocalDateTime dataPagamento
+    -Funcionario registradoPor
+    +Long getId()
+    +Pedido getPedido()
+    +BigDecimal getValor()
+    +TipoPagamento getTipo()
+    +FormaPagamento getForma()
+    +LocalDateTime getDataPagamento()
+    +Funcionario getRegistradoPor()
+  }
+
+  class RegraDeNegocioException extends RuntimeException {
+    +RegraDeNegocioException(String mensagem)
+    +RegraDeNegocioException(String mensagem, Throwable causa)
+  }
+}
+
+package "br.com.encomendas.model.enums" {
+  enum CanalOrigem {
+    WHATSAPP
+    INSTAGRAM
+    PRESENCIAL
+  }
+
+  enum FormaPagamento {
+    PIX
+    CARTAO
+    DINHEIRO
+  }
+
+  enum OrigemAprovacao {
+    CLIENTE_VIA_LINK
+    ATENDENTE
+  }
+
+  enum PerfilFuncionario {
+    ATENDIMENTO
+    PRODUCAO
+    ENTREGA
+    PROPRIETARIO
+  }
+
+  enum StatusPedido {
+    RECEBIDO
+    AGUARDANDO_MATERIAL
+    EM_PRODUCAO
+    PRONTO
+    ENTREGUE
+    CANCELADO
+    +boolean podeIrPara(StatusPedido destino)
+  }
+
+  enum StatusVersao {
+    PENDENTE_APROVACAO
+    APROVADA
+    INVALIDADA
+  }
+
+  enum TipoPagamento {
+    SINAL
+    PARCIAL
+    RESTANTE
+  }
+}
+
+' Relacionamentos com cardinalidade e papéis
+Cliente "1" --> "0..*" Pedido : pedidos / cliente
+Funcionario "1" --> "0..*" Pedido : pedidosAtendidos / atendente
+Funcionario "1" --> "0..*" VersaoPedido : versoesCriadas / criadaPor
+Funcionario "0..1" --> "0..*" VersaoPedido : versoesAprovadas / aprovador
+Funcionario "1" --> "0..*" Pagamento : pagamentosRegistrados / registradoPor
+DiaProducao "1" --> "0..*" Pedido : pedidos / diaProducao
+Pedido "1" --> "0..*" VersaoPedido : versoes / pedido
+Pedido "1" --> "0..*" Pagamento : pagamentos / pedido
+Pedido "1" *-- "0..1" LinkAcompanhamento : linkAcompanhamento / pedido
+VersaoPedido "1" --> "0..*" ItemPedido : itens / versaoPedido
+Produto "1" --> "0..*" ItemPedido : itens / produto
+
+' Relacionamentos de enumeração
+Cliente "0..*" --> "1" CanalOrigem : canalOrigem
+Funcionario "0..*" --> "1" PerfilFuncionario : perfil
+Pedido "0..*" --> "1" StatusPedido : status
+VersaoPedido "0..*" --> "1" StatusVersao : status
+VersaoPedido "0..*" --> "0..1" OrigemAprovacao : origemAprovacao
+Pagamento "0..*" --> "1" TipoPagamento : tipo
+Pagamento "0..*" --> "1" FormaPagamento : forma
+
+@enduml
