@@ -42,7 +42,7 @@ Justificativa por três critérios:
 2. **Complexidade do sistema** — domínio pequeno, único módulo implantável (um único
    JAR executável com banco H2 embutido). Uma arquitetura hexagonal adicionaria camadas
    de tradução (portas, adaptadores, DTOs) sem retorno proporcional neste tamanho.
-3. **Características da equipe** — 4 estudantes que já conhecem Spring Boot e o padrão
+3. **Características da equipe** — 2 estudantes que já conhecem Spring Boot e o padrão
    em camadas é o mais conhecido da equipe. Reduz a curva de aprendizado e facilita o
    trabalho em grupo.
 
@@ -122,4 +122,4 @@ mvn test
 ## 7. Diagrama e integrantes
 
 - Diagrama de classes: `docs/diagrama-de-classes.svg` (e `.png`, `.puml`)
-- Integrantes: Emmanuel Kleber, Abraão, Thiago Puentes, Lucas e Vitor Rodrigo.
+- Integrantes: Abraão e Vitor Rodrigo.
