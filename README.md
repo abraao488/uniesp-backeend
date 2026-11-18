@@ -122,4 +122,4 @@ mvn test
 ## 7. Diagrama e integrantes
 
 - Diagrama de classes: `docs/diagrama-de-classes.svg` (e `.png`, `.puml`)
-- Integrantes: Emmanuel Kleber, Abraão, Thiago Puentes e Lucas.
+- Integrantes: Emmanuel Kleber, Abraão, Thiago Puentes, Lucas e Vitor Rodrigo.
